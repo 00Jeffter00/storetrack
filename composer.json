@@ -7,5 +7,9 @@
         }
     },
     "minimum-stability": "stable",
-    "require": {}
+    "require": {
+        "components/jquery": "^4.0",
+        "twbs/bootstrap": "^5.3",
+        "nnnick/chartjs": "^2.9"
+    }
 }

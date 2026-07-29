@@ -6,21 +6,27 @@
     $("body").toggleClass("sidebar-toggled");
     $(".sidebar").toggleClass("toggled");
     if ($(".sidebar").hasClass("toggled")) {
-      $('.sidebar .collapse').collapse('hide');
+      $('.sidebar .collapse').each(function() {
+        bootstrap.Collapse.getOrCreateInstance(this, {toggle: false}).hide();
+      });
     };
   });
 
   // Close any open menu accordions when window is resized below 768px
   $(window).resize(function() {
     if ($(window).width() < 768) {
-      $('.sidebar .collapse').collapse('hide');
+      $('.sidebar .collapse').each(function() {
+        bootstrap.Collapse.getOrCreateInstance(this, {toggle: false}).hide();
+      });
     };
     
     // Toggle the side navigation when window is resized below 480px
     if ($(window).width() < 480 && !$(".sidebar").hasClass("toggled")) {
       $("body").addClass("sidebar-toggled");
       $(".sidebar").addClass("toggled");
-      $('.sidebar .collapse').collapse('hide');
+      $('.sidebar .collapse').each(function() {
+        bootstrap.Collapse.getOrCreateInstance(this, {toggle: false}).hide();
+      });
     };
   });
 
@@ -49,7 +55,7 @@
     var $anchor = $(this);
     $('html, body').stop().animate({
       scrollTop: ($($anchor.attr('href')).offset().top)
-    }, 1000, 'easeInOutExpo');
+    }, 1000, 'swing');
     e.preventDefault();
   });
 

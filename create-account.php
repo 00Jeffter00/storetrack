@@ -22,8 +22,10 @@
 
 </head>
 
-<body class="d-flex align-items-center vh-100"
-    style="background: url('resources/img/login-bg.png') no-repeat center; background-size: cover;">
+<body 
+    class="d-flex align-items-center vh-100"
+    style="background: url('resources/img/login-bg.png') no-repeat center; background-size: cover;"
+>
 
     <div class="container">
 
