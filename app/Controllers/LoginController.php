@@ -65,7 +65,7 @@ class LoginController
             User::activeRemember($user["id"], $user["email"], null);
         }
 
-        $_SESSION["auth"] = hash("sha256", $user["id"]);
+        $_SESSION["auth"] = $user["id"];
 
         Redirect::to("../dashboard/index.php");
     }

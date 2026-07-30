@@ -76,7 +76,7 @@
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link" href="charts.html">
+                <a class="nav-link" href="products.php">
                     <i class="fa-solid fa-boxes-packing"></i>
                     <span>Products</span></a>
             </li>
