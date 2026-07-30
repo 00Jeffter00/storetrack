@@ -1,6 +1,6 @@
-<?php 
-    require_once __DIR__ . "/../config/app.php"; 
-    require_once __DIR__ . "/../config/auth.php"; 
+<?php
+require_once __DIR__ . "/../config/app.php";
+require_once __DIR__ . "/../config/auth.php";
 ?>
 
 <!DOCTYPE html>
@@ -16,7 +16,7 @@
 
     <title><?= APP_NAME ?> - Products</title>
 
-   <!-- Custom fonts for this template-->
+    <!-- Custom fonts for this template-->
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
@@ -35,9 +35,9 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <?php 
-            $active = "products";
-            require __DIR__ . "/../resources/components/navbar.php" 
+        <?php
+        $active = "products";
+        require __DIR__ . "/../resources/components/navbar.php"
         ?>
         <!-- End of Sidebar -->
 
@@ -48,8 +48,8 @@
             <div id="content">
 
                 <!-- Topbar -->
-                <?php 
-                    require __DIR__ . "/../resources/components/header.php";
+                <?php
+                require __DIR__ . "/../resources/components/header.php";
                 ?>
                 <!-- End of Topbar -->
 
@@ -57,8 +57,16 @@
                 <div class="container-fluid">
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                            <h4 class="m-0 font-weight-bold text-primary">
+                                <i class="fa-solid fa-boxes-packing"></i> PRODUCTS
+                            </h4>
+                            <a href="./products-create.php" class="btn btn-success btn-icon-split">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-plus"></i>
+                                </span>
+                                <span class="text">Add new product</span>
+                            </a>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -74,26 +82,16 @@
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <!-- <tfoot>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Position</th>
-                                            <th>Office</th>
-                                            <th>Age</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
-                                        </tr>
-                                    </tfoot> -->
                                     <tbody>
                                         <?php
 
-                                            require __DIR__ . "/../vendor/autoload.php";
+                                        require __DIR__ . "/../vendor/autoload.php";
 
-                                            use App\Config\Database;
+                                        use App\Config\Database;
 
-                                            $conn = Database::connection();
+                                        $conn = Database::connection();
 
-                                            $sql = "
+                                        $sql = "
                                                 SELECT 
                                                     p.*,
                                                     c.description as category,
@@ -104,31 +102,31 @@
                                                 WHERE p.user_id = :user_id
                                             ";
 
-                                            $stmt = $conn->prepare($sql);
-                                            $stmt->execute([
-                                                ":user_id" => $_SESSION["auth"]
-                                            ]);
+                                        $stmt = $conn->prepare($sql);
+                                        $stmt->execute([
+                                            ":user_id" => $_SESSION["auth"]
+                                        ]);
 
-                                            $products = $stmt->fetchAll();
+                                        $products = $stmt->fetchAll();
 
-                                            for($i = 0; $i < 25; $i++) {
-                                                foreach ($products as $product) {
-                                                    echo "
+                                        for ($i = 0; $i < 25; $i++) {
+                                            foreach ($products as $product) {
+                                                echo "
                                                         <tr>
                                                             <td> $i </td>
                                                             <td> Produto $i </td>
-                                                            <td>". $product["category"] ."</td>
-                                                            <td>". $product["unit"] ."</td>
-                                                            <td>". $product["quantity"] ."</td>
-                                                            <td>". $product["price"] ."</td>
+                                                            <td>" . $product["category"] . "</td>
+                                                            <td>" . $product["unit"] . "</td>
+                                                            <td>" . $product["quantity"] . "</td>
+                                                            <td>" . $product["price"] . "</td>
                                                             <td>
                                                                 <a>Change</a>
                                                                 <a>Delete</a>
                                                             </td>
                                                         </tr>
                                                     ";
-                                                };
-                                            }
+                                            };
+                                        }
                                         ?>
                                     </tbody>
                                 </table>
