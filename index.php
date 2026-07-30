@@ -1,3 +1,8 @@
+<?php 
+    require_once __DIR__ . "/config/app.php"; 
+    require_once __DIR__ . "/config/remember.php";
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -42,23 +47,28 @@
                                 <p>Organization, management and simplicity</p>
                             </div>
 
-                            <form class="user" action="/" method="POST">
+                            <form class="user" action="routes/login.php" method="POST">
                                 <div class="form-group">
                                     <input type="email" class="form-control form-control-user"
-                                        id="exampleInputEmail" aria-describedby="emailHelp"
+                                        name="email" id="email" aria-describedby="emailHelp"
                                         placeholder="Enter Email Address...">
                                 </div>
+
                                 <div class="form-group">
                                     <input type="password" class="form-control form-control-user"
-                                        id="exampleInputPassword" placeholder="Password">
+                                        name="password" id="password" placeholder="Password">
                                 </div>
+
                                 <div class="form-group">
                                     <div class="custom-control custom-checkbox small">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck">
-                                        <label class="custom-control-label" for="customCheck">Remember
+                                        <input type="checkbox" class="custom-control-input" name="remember" id="remember">
+                                        <label class="custom-control-label" for="remember">Remember
                                             Me</label>
                                     </div>
                                 </div>
+
+                                <?php require "./resources/components/error.php" ?>
+
                                 <button type="submit" class="btn btn-primary btn-user btn-block">
                                     Login
                                 </button>

@@ -1,15 +1,25 @@
+<?php 
+    require_once __DIR__ . "/config/app.php"; 
+
+    $oldName = $oldEmail = "";
+
+    if(isset($_SESSION["oldData"])) {
+        $oldName = $_SESSION["oldData"]["name"];
+        $oldEmail = $_SESSION["oldData"]["email"];
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Register</title>
+    <title><?= APP_NAME ?> - Register</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -42,31 +52,40 @@
                                 <h1 class="h4 text-gray-900">Create an <b>Account!</b></h1>
                                 <p>Enter your information</p>
                             </div>
-                            <form class="user">
+
+                            <form class="user" action="./routes/register.php" method="POST">
                                 <div class="form-group row">
                                     <div class="col-sm-12 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="exampleFirstName"
-                                            placeholder="First Name">
+                                        <input value="<?= $oldName ?>" type="text" class="form-control form-control-user" id="name" name="name"
+                                            placeholder="Your name">
                                     </div>
                                 </div>
+
                                 <div class="form-group">
-                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail"
+                                    <input value="<?= $oldEmail ?>" type="email" class="form-control form-control-user" id="email" name="email"
                                         placeholder="Email Address">
                                 </div>
+
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input type="password" class="form-control form-control-user"
-                                            id="exampleInputPassword" placeholder="Password">
+                                            id="password" name="password" placeholder="Password">
                                     </div>
                                     <div class="col-sm-6">
                                         <input type="password" class="form-control form-control-user"
-                                            id="exampleRepeatPassword" placeholder="Repeat Password">
+                                            id="confirmation" name="confirmation" placeholder="Repeat Password">
                                     </div>
                                 </div>
-                                <a href="login.html" class="btn btn-primary btn-user btn-block">
+
+                                <?php 
+                                    require __DIR__ . "/resources/components/error.php" 
+                                ?>
+
+                                <button type="submit" class="btn btn-primary btn-user btn-block">
                                     Register Account
-                                </a>
+                                </button>
                             </form>
+
                             <hr>
                             <div class="text-center">
                                 <a class="small" href="index.php">Already have an account? Login!</a>
