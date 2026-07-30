@@ -66,6 +66,7 @@ class LoginController
         }
 
         $_SESSION["auth"] = $user["id"];
+        $_SESSION["auth.name"] = $user["name"];
 
         Redirect::to("../dashboard/index.php");
     }
