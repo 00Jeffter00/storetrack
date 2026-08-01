@@ -7,20 +7,22 @@ require_once __DIR__ . "/../vendor/autoload.php";
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Unit;
+use App\Helpers\Redirect;
+
+$product = Product::getByID($_SESSION["auth"], $_GET["id"]);
+
+if(empty($product)) {
+    Redirect::to("/php/storetrack/404.php");
+}
 
 $categories = Category::get($_SESSION["auth"]);
 $unities = Unit::get($_SESSION["auth"]);
 
-$oldDesc = $oldPrice = $oldCategory = $oldUnit = "";
-
-if (isset($_SESSION["old"])) {
-    $oldDesc = $_SESSION["old"]["description"];
-    $oldPrice = $_SESSION["old"]["price"];
-    $oldCategory = $_SESSION["old"]["category"];
-    $oldUnit = $_SESSION["old"]["unit"];
-
-    unset($_SESSION["old"]);
-}
+$price = $product["price"];
+$old_price = $product["old_price"];
+$description = $product["description"];
+$category_id = $product["category_id"];
+$unit_id = $product["unit_id"];
 ?>
 
 <!DOCTYPE html>
@@ -34,7 +36,7 @@ if (isset($_SESSION["old"])) {
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title><?= APP_NAME ?> - Products</title>
+    <title><?= APP_NAME ?> - Edit</title>
 
     <!-- Custom fonts for this template-->
     <link
@@ -86,15 +88,18 @@ if (isset($_SESSION["old"])) {
                             </a>
 
                             <h4 class="m-0 pl-2 font-weight-bold text-primary">
-                                PRODUCT CREATION
+                                PRODUCT EDIT
                             </h4>
                         </div>
 
                         <div class="card-body">
                             <form action="../routes/product.php" method="POST">
+                                <input hidden readonly value="put" name="method" id="method"/>
+                                <input hidden readonly value="<?= $product["id"] ?>" name="product_id" id="product_id"/>
+
                                 <div class="form-group">
                                     <label for="description">Description</label>
-                                    <input value="<?= $oldDesc ?>" type="text" class="form-control" name="description" id="description" placeholder="Your product name here">
+                                    <input value="<?= $description ?>" type="text" class="form-control" name="description" id="description" placeholder="Your product name here">
                                 </div>
 
                                 <div class="form-row">
@@ -104,7 +109,7 @@ if (isset($_SESSION["old"])) {
                                             <?php foreach ($categories as $category): ?>
                                                 <option
                                                     value="<?= $category["id"] ?>"
-                                                    <?= $category["id"] == $oldCategory ? "selected" : "" ?>>
+                                                    <?= $category["id"] == $category_id ? "selected" : "" ?>>
                                                     <?= htmlspecialchars($category["description"]) ?>
                                                 </option>
                                             <?php endforeach; ?>
@@ -116,15 +121,21 @@ if (isset($_SESSION["old"])) {
                                             <?php foreach ($unities as $unit): ?>
                                                 <option
                                                     value="<?= $unit["id"] ?>"
-                                                    <?= $unit["id"] == $oldUnit ? "selected" : "" ?>>
+                                                    <?= $unit["id"] == $unit_id ? "selected" : "" ?>>
                                                     <?= htmlspecialchars($unit["description"]) ?>
                                                 </option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
+
+                                    <div class="form-group col-md-2">
+                                        <label for="old_price">Old Price</label>
+                                        <input readonly value="<?= $old_price ?>" type="text" class="form-control" name="old_price" id="old_price" placeholder="Product price">
+                                    </div>
+
                                     <div class="form-group col-md-2">
                                         <label for="price">Price</label>
-                                        <input value="<?= $oldPrice ?>" type="number" class="form-control" name="price" id="price" placeholder="Product price">
+                                        <input value="<?= $price ?>" type="text" class="form-control" name="price" id="price" placeholder="Product price">
                                     </div>
 
                                 </div>

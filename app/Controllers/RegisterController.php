@@ -6,6 +6,8 @@ require_once __DIR__ . "/../../vendor/autoload.php";
 require_once __DIR__ . "/../Helpers/Redirect.php";
 
 use App\Models\User;
+use App\Models\Category;
+use App\Models\Unit;
 use App\Helpers\Redirect;
 
 class RegisterController
@@ -43,9 +45,12 @@ class RegisterController
             Redirect::to("../create-account.php");
         }
 
-        unset($_OLD["oldData"]);
+        unset($_SESSION["oldData"]);
 
         // 3. Account creation
-        User::create($data["name"], $data["email"], $data["password"]);
+        $user_id = User::create($data["name"], $data["email"], $data["password"]);     
+
+        Category::insert($user_id, "General");
+        Unit::insert($user_id, "Unit", "UN");
     }
 }

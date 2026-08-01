@@ -4,9 +4,9 @@ require_once __DIR__ . "/../config/auth.php";
 
 require __DIR__ . "/../vendor/autoload.php";
 
-use App\Models\Product;
+use App\Models\Category;
 
-$products = Product::get($_SESSION["auth"]);
+$categories = Category::get($_SESSION["auth"]);
 ?>
 
 <!DOCTYPE html>
@@ -20,7 +20,7 @@ $products = Product::get($_SESSION["auth"]);
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title><?= APP_NAME ?> - Products</title>
+    <title><?= APP_NAME ?> - Categories</title>
 
     <!-- Custom fonts for this template-->
     <link
@@ -42,7 +42,7 @@ $products = Product::get($_SESSION["auth"]);
 
         <!-- Sidebar -->
         <?php
-        $active = "products";
+        $active = "categories";
         require __DIR__ . "/../resources/components/navbar.php"
         ?>
         <!-- End of Sidebar -->
@@ -66,18 +66,22 @@ $products = Product::get($_SESSION["auth"]);
                     require __DIR__ . "/../resources/components/success.php";
                     ?>
 
+                    <?php
+                    require __DIR__ . "/../resources/components/error.php";
+                    ?>
+
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3 d-flex justify-content-between align-items-center">
                             <h4 class="m-0 font-weight-bold text-primary">
-                                <i class="fa-solid fa-boxes-packing"></i> PRODUCTS
+                                <i class="fa-solid fa-folder-plus"></i> CATEGORIES
                             </h4>
 
-                            <a href="./products-create.php" class="btn btn-success btn-icon-split">
+                            <a href="./category-create.php" class="btn btn-success btn-icon-split">
                                 <span class="icon text-white-50">
                                     <i class="fas fa-plus"></i>
                                 </span>
-                                <span class="text">Add new product</span>
+                                <span class="text">Add new category</span>
                             </a>
                         </div>
                         <div class="card-body">
@@ -87,36 +91,26 @@ $products = Product::get($_SESSION["auth"]);
                                         <tr>
                                             <th>ID</th>
                                             <th>Description</th>
-                                            <th>Group</th>
-                                            <th>Unit</th>
-                                            <th>Stock</th>
-                                            <th>Price</th>
-                                            <th class="bg-light text-secondary">Old price</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php 
                                             $id = 0;
-                                            foreach ($products as $product): 
+                                            foreach ($categories as $category): 
                                         ?>
                                             <?php $id++ ?>
                                             <tr>
                                                 <td><?= $id ?></td>
-                                                <td><?= htmlspecialchars($product["description"]) ?></td>
-                                                <td><?= htmlspecialchars($product["category"]) ?></td>
-                                                <td><?= htmlspecialchars($product["unit"]) ?></td>
-                                                <td><?= htmlspecialchars($product["quantity"]) ?></td>
-                                                <td><?= htmlspecialchars($product["price"]) ?></td>
-                                                <td class="bg-light text-secondary"><?= htmlspecialchars($product["old_price"]) ?></td>
+                                                <td><?= htmlspecialchars($category["description"]) ?></td>
                                                 <td>
-                                                    <a href="./product-edit.php?id=<?= $product["id"] ?>" class="btn btn-secondary btn-icon-split">
+                                                    <a href="./category-edit.php?id=<?= $category["id"] ?>" class="btn btn-secondary btn-icon-split">
                                                         <span class="icon text-white">
                                                             <i class="fas fa-pencil"></i>
                                                         </span>
                                                     </a>
 
-                                                    <a href="../routes/product.php?id=<?= $product["id"] ?>&action=delete" class="btn btn-danger btn-icon-split">
+                                                    <a href="../routes/category.php?id=<?= $category["id"] ?>&action=delete" class="btn btn-danger btn-icon-split">
                                                         <span class="icon text-white">
                                                             <i class="fas fa-trash"></i>
                                                         </span>

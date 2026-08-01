@@ -29,7 +29,8 @@ if (isset($_COOKIE["remember_token"])) {
     $result = $stmt->fetch();
 
     if (!empty($result)) {
-        $_SESSION["auth"] = hash("sha256", $result["id"]);
+        $_SESSION["auth"] = $result["id"];
+        $_SESSION["auth.name"] = $result["name"];
         Redirect::to("/php/storetrack/dashboard/index.php");
     }
 }

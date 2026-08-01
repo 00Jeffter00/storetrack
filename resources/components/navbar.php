@@ -49,14 +49,14 @@
 
     <!-- Nav Item - Tables -->
     <li class="nav-item <?= $active == "categories" ? "active" : "" ?>">
-        <a class="nav-link" href="tables.html">
+        <a class="nav-link" href="categories.php">
             <i class="fa-solid fa-folder-plus"></i>
             <span>Categories</span></a>
     </li>
 
     <!-- Nav Item - Tables -->
     <li class="nav-item <?= $active == "unities" ? "active" : "" ?>">
-        <a class="nav-link" href="tables.html">
+        <a class="nav-link" href="unities.php">
             <i class="fa-solid fa-tag"></i>
             <span>Unities</span></a>
     </li>

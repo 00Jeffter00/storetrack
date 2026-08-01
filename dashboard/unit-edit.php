@@ -1,26 +1,17 @@
 <?php
 require_once __DIR__ . "/../config/app.php";
 require_once __DIR__ . "/../config/auth.php";
-
 require_once __DIR__ . "/../vendor/autoload.php";
 
-use App\Models\Product;
-use App\Models\Category;
 use App\Models\Unit;
+use App\Helpers\Redirect;
 
-$categories = Category::get($_SESSION["auth"]);
-$unities = Unit::get($_SESSION["auth"]);
+$unit = Unit::getByID($_SESSION["auth"], $_GET["id"]);
 
-$oldDesc = $oldPrice = $oldCategory = $oldUnit = "";
-
-if (isset($_SESSION["old"])) {
-    $oldDesc = $_SESSION["old"]["description"];
-    $oldPrice = $_SESSION["old"]["price"];
-    $oldCategory = $_SESSION["old"]["category"];
-    $oldUnit = $_SESSION["old"]["unit"];
-
-    unset($_SESSION["old"]);
+if(empty($unit)) {
+    Redirect::to("/php/storetrack/404.php");
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -34,7 +25,7 @@ if (isset($_SESSION["old"])) {
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title><?= APP_NAME ?> - Products</title>
+    <title><?= APP_NAME ?> - Unities</title>
 
     <!-- Custom fonts for this template-->
     <link
@@ -56,8 +47,8 @@ if (isset($_SESSION["old"])) {
 
         <!-- Sidebar -->
         <?php
-        $active = "products";
-        require __DIR__ . "/../resources/components/navbar.php"
+            $active = "unities";
+            require __DIR__ . "/../resources/components/navbar.php"
         ?>
         <!-- End of Sidebar -->
 
@@ -79,54 +70,32 @@ if (isset($_SESSION["old"])) {
                     <div class="card shadow mb-4">
                     
                         <div class="card-header py-3 d-flex align-items-center gap-3">
-                            <a href="./products.php" class="btn btn-primary btn-icon-split">
+                            <a href="./unities.php" class="btn btn-primary btn-icon-split">
                                 <span class="icon text-white">
                                     <i class="fas fa-arrow-left"></i>
                                 </span>
                             </a>
 
                             <h4 class="m-0 pl-2 font-weight-bold text-primary">
-                                PRODUCT CREATION
+                                UNIT CREATION
                             </h4>
                         </div>
 
                         <div class="card-body">
-                            <form action="../routes/product.php" method="POST">
-                                <div class="form-group">
-                                    <label for="description">Description</label>
-                                    <input value="<?= $oldDesc ?>" type="text" class="form-control" name="description" id="description" placeholder="Your product name here">
-                                </div>
-
+                            <form action="../routes/unit.php" method="POST">
                                 <div class="form-row">
-                                    <div class="form-group col-md-4">
-                                        <label for="category">Category</label>
-                                        <select name="category" id="category" class="form-control">
-                                            <?php foreach ($categories as $category): ?>
-                                                <option
-                                                    value="<?= $category["id"] ?>"
-                                                    <?= $category["id"] == $oldCategory ? "selected" : "" ?>>
-                                                    <?= htmlspecialchars($category["description"]) ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-2">
-                                        <label for="unit">Unit</label>
-                                        <select name="unit" id="unit" class="form-control">
-                                            <?php foreach ($unities as $unit): ?>
-                                                <option
-                                                    value="<?= $unit["id"] ?>"
-                                                    <?= $unit["id"] == $oldUnit ? "selected" : "" ?>>
-                                                    <?= htmlspecialchars($unit["description"]) ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-2">
-                                        <label for="price">Price</label>
-                                        <input value="<?= $oldPrice ?>" type="number" class="form-control" name="price" id="price" placeholder="Product price">
-                                    </div>
+                                    <input readonly hidden value="<?= $unit["id"] ?>" name="id">
+                                    <input readonly hidden value="put" name="method">
 
+                                    <div class="form-group col-md-6">
+                                        <label for="description">Description</label>
+                                        <input value="<?= $unit["description"] ?>" type="text" class="form-control" name="description" id="description" placeholder="Your unit type name here">
+                                    </div>
+    
+                                    <div class="form-group col-md-2">
+                                        <label for="abbrv">Abbreviation</label>
+                                        <input value="<?= $unit["abbrv"] ?>" maxlength="3" type="text" class="form-control" name="abbrv" id="abbrv" placeholder="(MAX. 3)">
+                                    </div>
                                 </div>
 
                                 <?php
@@ -134,7 +103,7 @@ if (isset($_SESSION["old"])) {
                                 ?>
 
                                 <div class="w-100 d-flex justify-content-end ">
-                                    <a href="./products.php" class="btn btn-danger btn-icon-split mr-2">
+                                    <a href="./unities.php" class="btn btn-danger btn-icon-split mr-2">
                                         <span class="icon text-white-50">
                                             <i class="fas fa-trash"></i>
                                         </span>

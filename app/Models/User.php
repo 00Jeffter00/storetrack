@@ -8,7 +8,7 @@ use App\Config\Database;
 
 class User
 {
-    public static function create(string $name, string $email, string $password): void
+    public static function create(string $name, string $email, string $password)
     {
         $conn = Database::connection();
 
@@ -24,6 +24,8 @@ class User
             "email" => $email,
             "password" => password_hash($password, PASSWORD_DEFAULT),
         ]);
+
+        return (int) $conn->lastInsertId();
     }
 
     public static function emailExists(string $email): bool
