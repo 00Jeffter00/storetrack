@@ -27,7 +27,7 @@
     </div>
 
     <li class="nav-item <?= $active == "movements" ? "active" : "" ?>">
-        <a class="nav-link" href="charts.html">
+        <a class="nav-link" href="movements.php">
             <i class="fa-solid fa-people-carry-box"></i>
             <span>Movements</span></a>
     </li>

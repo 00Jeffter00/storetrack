@@ -21,6 +21,7 @@ class ProductController
             Redirect::to("/php/storetrack/dashboard/products-create.php");
         };
 
+        unset($_SESSION["old"]);
         Product::insert($userId, $data["category"], $data["unit"], $data["description"], $data["price"]);
     }
 

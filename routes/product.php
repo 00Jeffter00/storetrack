@@ -7,7 +7,6 @@ use App\Helpers\Redirect;
 
 session_status() === PHP_SESSION_ACTIVE ? "" : session_start();
 
-
 if ($_SERVER["REQUEST_METHOD"] === "POST" && !isset($_POST["method"])) {
     $_SESSION["old"] = $_POST;
 
@@ -18,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && !isset($_POST["method"])) {
         Redirect::to("/php/storetrack/dashboard/products-create.php");
     }
 
-    $_SESSION["success"] = "Success on create product id " . $_POST["id"];
+    $_SESSION["success"] = "Success on create product: " . $_POST["description"];
 }
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["method"] === "put") {
