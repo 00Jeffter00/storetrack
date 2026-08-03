@@ -5,8 +5,13 @@ require_once __DIR__ . "/../config/auth.php";
 require_once __DIR__ . "/../vendor/autoload.php";
 
 use App\Models\Product;
+use App\Models\Movement;
+use App\Models\MovementItem;
 
 $products = Product::get($_SESSION["auth"]);
+
+$movements = Movement::getByID($_SESSION["auth"], $_GET["id"]);
+$mov_items = MovementItem::getByMovement($_SESSION["auth"], $_GET["id"]);
 ?>
 
 <!DOCTYPE html>
@@ -72,40 +77,42 @@ $products = Product::get($_SESSION["auth"]);
                             </a>
 
                             <h4 class="m-0 pl-2 font-weight-bold text-primary">
-                                MOVEMENT CREATION
+                                MOVEMENT EDIT
                             </h4>
                         </div>
 
                         <div class="card-body">
                             <form action="../routes/movement.php" method="POST" id="movementForm">
+                                <input hidden value="<?= $_GET["id"] ?>" type="text" name="id">
+                                <input hidden value="put" type="text" name="method">
 
                                 <div class="form-row">
                                     <div class="form-group col-md-2">
                                         <label for="status">Status</label>
                                         <select name="status" id="status" class="form-control">
-                                            <option selected value="O">Open</option>
-                                            <option value="F">Finished</option>
+                                            <option <?= $movements["status"] === "O" ? "selected" : "" ?> value="O">Open</option>
+                                            <option <?= $movements["status"] === "F" ? "selected" : "" ?> value="F">Finished</option>
                                         </select>
                                     </div>
 
                                     <div class="form-group col-md-2">
                                         <label for="type">Type</label>
                                         <select name="type" id="type" class="form-control">
-                                            <option value="E">Entry</option>
-                                            <option value="O">Outflow</option>
-                                            <option value="A">Adjustment</option>
+                                            <option <?= $movements["type"] === "E" ? "selected" : "" ?> value="E">Entry</option>
+                                            <option <?= $movements["type"] === "O" ? "selected" : "" ?> value="O">Outflow</option>
+                                            <option <?= $movements["type"] === "A" ? "selected" : "" ?> value="A">Adjustment</option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="title">Title</label>
-                                    <input type="text" class="form-control" name="title" id="title" placeholder="Insert a main title">
+                                    <input value="<?= $movements["title"] ?>" type="text" class="form-control" name="title" id="title" placeholder="Insert a main title">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="observation">Observation</label>
-                                    <textarea placeholder="Insert details" class="form-control" name="observation" id="observation" rows="3"></textarea>
+                                    <textarea placeholder="Insert details" class="form-control" name="observation" id="observation" rows="3"><?= $movements["obs"] ?></textarea>
                                 </div>
 
                                 <div class="card border-left-primary shadow-none">
@@ -120,7 +127,6 @@ $products = Product::get($_SESSION["auth"]);
                                             <div class="form-group col-md-6 mb-0">
                                                 <label for="itemProduct">Product</label>
                                                 <select id="itemProduct" class="form-control">
-                                                    <option value="">Select a product...</option>
                                                     <?php foreach ($products as $product): ?>
                                                         <option
                                                             value="<?= $product["id"] ?>"
@@ -154,11 +160,29 @@ $products = Product::get($_SESSION["auth"]);
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr id="emptyItemsRow">
-                                                        <td colspan="4" class="text-center text-secondary">
-                                                            No items added yet.
-                                                        </td>
-                                                    </tr>
+                                                    <?php foreach ($mov_items as $item): ?>
+                                                        <tr class="item-row" data-product-id="<?= $item["prd_id"] ?>">
+                                                            <td class="item-number text-center align-middle">
+                                                                <?= $item["prd_id"] ?>
+                                                            </td>
+                                                            <td class="align-middle">
+                                                                <?php
+                                                                $produto = Product::getByID($_SESSION["auth"], $item["prd_id"]);
+
+                                                                echo $produto["description"];
+                                                                ?>
+                                                                <input type="hidden" name="prd_id[]" value="<?= $item["prd_id"] ?>">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" min="0.01" step="any" class="form-control form-control-sm item-quantity" name="quantity[]" value="<?= $item["qtd"] ?>">
+                                                            </td>
+                                                            <td class="text-center align-middle">
+                                                                <button type="button" class="btn btn-danger btn-sm btn-remove-item">
+                                                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    <?php endforeach; ?>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -227,10 +251,10 @@ $products = Product::get($_SESSION["auth"]);
 
     <!-- Page level custom scripts -->
     <script>
-        $(function () {
+        $(function() {
 
             function renderItemNumbers() {
-                $("#itemsTable .item-number").each(function (index) {
+                $("#itemsTable .item-number").each(function(index) {
                     $(this).text(index + 1);
                 });
             }
@@ -249,7 +273,7 @@ $products = Product::get($_SESSION["auth"]);
                 }
             }
 
-            $("#btnAddItem").on("click", function () {
+            $("#btnAddItem").on("click", function() {
                 const $product = $("#itemProduct");
                 const $quantity = $("#itemQuantity");
                 const productId = $product.val();
@@ -299,13 +323,13 @@ $products = Product::get($_SESSION["auth"]);
                 $product.focus();
             });
 
-            $(document).on("click", ".btn-remove-item", function () {
+            $(document).on("click", ".btn-remove-item", function() {
                 $(this).closest(".item-row").remove();
                 renderItemNumbers();
                 refreshEmptyRow();
             });
 
-            $("#movementForm").on("submit", function (e) {
+            $("#movementForm").on("submit", function(e) {
                 if ($("#itemsTable .item-row").length === 0) {
                     e.preventDefault();
                     alert("Add at least one item to the movement.");

@@ -66,6 +66,10 @@ $products = Product::get($_SESSION["auth"]);
                     require __DIR__ . "/../resources/components/success.php";
                     ?>
 
+                    <?php
+                    require __DIR__ . "/../resources/components/error.php";
+                    ?>
+
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3 d-flex justify-content-between align-items-center">

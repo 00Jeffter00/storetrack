@@ -130,6 +130,28 @@ class Product
         ]);
     }
 
+    public static function updateQuantity(
+        int $user_id, 
+        int $prd_id, 
+        float $quantity, 
+        string $movement
+    ) {
+        $conn = Database::connection();
+
+        $sql = "
+            UPDATE products
+            SET quantity = $movement
+            WHERE id = :prd_id AND user_id = :user_id
+        ";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            "prd_id" => $prd_id,
+            "user_id" => $user_id,
+            "qtd" => $quantity,
+        ]);
+    }
+
     public static function delete(
         int $userId, 
         int $prdId, 

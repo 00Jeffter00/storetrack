@@ -107,16 +107,16 @@ $movements = Movement::get($_SESSION["auth"]);
                                                 <td><?= htmlspecialchars($movement["title"]) ?></td>
                                                 <td><?= htmlspecialchars($movement["obs"]) ?></td>
                                                 <td><?= htmlspecialchars($movement["status"]) ?></td>
-                                                <td><?= htmlspecialchars($movement["created_id"]) ?></td>
-                                                <td class="bg-light text-secondary"><?= htmlspecialchars($movement["old_price"]) ?></td>
+                                                <td><?= htmlspecialchars($movement["created_at"]) ?></td>
+                                                <td class="bg-light text-secondary"><?= htmlspecialchars($movement["canceled_at"]) ?></td>
                                                 <td>
-                                                    <a href="./product-edit.php?id=<?= $movement["id"] ?>" class="btn btn-secondary btn-icon-split">
+                                                    <a href="./movement-edit.php?id=<?= $movement["id"] ?>" class="btn btn-secondary btn-icon-split">
                                                         <span class="icon text-white">
                                                             <i class="fas fa-pencil"></i>
                                                         </span>
                                                     </a>
 
-                                                    <a href="../routes/product.php?id=<?= $movement["id"] ?>&action=delete" class="btn btn-danger btn-icon-split">
+                                                    <a href="../routes/movement.php?id=<?= $movement["id"] ?>&action=delete" class="btn btn-danger btn-icon-split">
                                                         <span class="icon text-white">
                                                             <i class="fas fa-trash"></i>
                                                         </span>
