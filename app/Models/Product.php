@@ -16,7 +16,8 @@ class Product
             SELECT 
                 p.*,
                 c.description as category,
-                u.description as unit
+                u.description as unit,
+                u.abbrv
             FROM products p
                 LEFT JOIN categories c ON (c.id = p.category_id)
                 LEFT JOIN unities u ON (u.id = p.unit_id)
@@ -41,7 +42,8 @@ class Product
             SELECT 
                 p.*,
                 c.description as category,
-                u.description as unit
+                u.description as unit,
+                u.abbrv
 
             FROM products p
                 LEFT JOIN categories c ON (c.id = p.category_id)

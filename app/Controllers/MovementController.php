@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 require_once __DIR__ . "/../../vendor/autoload.php";
 
+use App\Helpers\Redirect;
 use App\Models\Product;
 use App\Models\Movement;
 use App\Models\MovementItem;
@@ -23,13 +24,13 @@ class MovementController
             ];
         }
 
-        $movement = " quantity + :qtd ";
+        $quantity_type = " quantity + :qtd ";
         switch ($data["type"]) {
             case "O":
-                $movement = " quantity - :qtd ";
+                $quantity_type = " quantity - :qtd ";
                 break;
             case "A":
-                $movement = " :qtd ";
+                $quantity_type = " :qtd ";
                 break;
         }
 
@@ -46,6 +47,12 @@ class MovementController
 
     public static function update(int $user_id, array $data)
     {
+        $already_finished = Movement::getByID($user_id, $data["id"]);
+
+        if($already_finished["status"] === "F") {
+            Redirect::to("/php/storetrack/404.php");
+        }
+
         Movement::update($user_id, $data["id"], $data["type"], $data["title"], $data["observation"], $data["status"]);
         $mov_items = MovementItem::getByMovement($user_id, $data["id"]);
 

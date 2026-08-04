@@ -8,10 +8,20 @@ use App\Models\Product;
 use App\Models\Movement;
 use App\Models\MovementItem;
 
+use App\Helpers\Redirect;
+
 $products = Product::get($_SESSION["auth"]);
 
 $movements = Movement::getByID($_SESSION["auth"], $_GET["id"]);
+
+if(empty($movements)) {
+    Redirect::to("/php/storetrack/404.php");
+}
+
 $mov_items = MovementItem::getByMovement($_SESSION["auth"], $_GET["id"]);
+
+$readonly = $movements["status"] === "F" ? "readonly" : "";
+$hidden = $movements["status"] === "F" ? "hidden" : "";
 ?>
 
 <!DOCTYPE html>
@@ -89,7 +99,7 @@ $mov_items = MovementItem::getByMovement($_SESSION["auth"], $_GET["id"]);
                                 <div class="form-row">
                                     <div class="form-group col-md-2">
                                         <label for="status">Status</label>
-                                        <select name="status" id="status" class="form-control">
+                                        <select <?= $readonly ?> name="status" id="status" class="form-control">
                                             <option <?= $movements["status"] === "O" ? "selected" : "" ?> value="O">Open</option>
                                             <option <?= $movements["status"] === "F" ? "selected" : "" ?> value="F">Finished</option>
                                         </select>
@@ -97,7 +107,7 @@ $mov_items = MovementItem::getByMovement($_SESSION["auth"], $_GET["id"]);
 
                                     <div class="form-group col-md-2">
                                         <label for="type">Type</label>
-                                        <select name="type" id="type" class="form-control">
+                                        <select <?= $readonly ?> name="type" id="type" class="form-control">
                                             <option <?= $movements["type"] === "E" ? "selected" : "" ?> value="E">Entry</option>
                                             <option <?= $movements["type"] === "O" ? "selected" : "" ?> value="O">Outflow</option>
                                             <option <?= $movements["type"] === "A" ? "selected" : "" ?> value="A">Adjustment</option>
@@ -107,12 +117,12 @@ $mov_items = MovementItem::getByMovement($_SESSION["auth"], $_GET["id"]);
 
                                 <div class="form-group">
                                     <label for="title">Title</label>
-                                    <input value="<?= $movements["title"] ?>" type="text" class="form-control" name="title" id="title" placeholder="Insert a main title">
+                                    <input <?= $readonly ?> value="<?= $movements["title"] ?>" type="text" class="form-control" name="title" id="title" placeholder="Insert a main title">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="observation">Observation</label>
-                                    <textarea placeholder="Insert details" class="form-control" name="observation" id="observation" rows="3"><?= $movements["obs"] ?></textarea>
+                                    <textarea <?= $readonly ?> placeholder="Insert details" class="form-control" name="observation" id="observation" rows="3"><?= $movements["obs"] ?></textarea>
                                 </div>
 
                                 <div class="card border-left-primary shadow-none">
@@ -123,7 +133,7 @@ $mov_items = MovementItem::getByMovement($_SESSION["auth"], $_GET["id"]);
                                     </div>
 
                                     <div class="card-body">
-                                        <div class="form-row align-items-end">
+                                        <div hidden class="form-row align-items-end">
                                             <div class="form-group col-md-6 mb-0">
                                                 <label for="itemProduct">Product</label>
                                                 <select id="itemProduct" class="form-control">
@@ -155,8 +165,9 @@ $mov_items = MovementItem::getByMovement($_SESSION["auth"], $_GET["id"]);
                                                     <tr>
                                                         <th class="text-center" style="width: 50px;">#</th>
                                                         <th>Product</th>
+                                                        <th class="text-center" style="width: 80px;">Unit</th>
                                                         <th style="width: 180px;">Quantity</th>
-                                                        <th class="text-center" style="width: 100px;">Actions</th>
+                                                        <th <?= $hidden ?> class="text-center" style="width: 100px;">Actions</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -165,6 +176,7 @@ $mov_items = MovementItem::getByMovement($_SESSION["auth"], $_GET["id"]);
                                                             <td class="item-number text-center align-middle">
                                                                 <?= $item["prd_id"] ?>
                                                             </td>
+                                                            
                                                             <td class="align-middle">
                                                                 <?php
                                                                 $produto = Product::getByID($_SESSION["auth"], $item["prd_id"]);
@@ -173,10 +185,15 @@ $mov_items = MovementItem::getByMovement($_SESSION["auth"], $_GET["id"]);
                                                                 ?>
                                                                 <input type="hidden" name="prd_id[]" value="<?= $item["prd_id"] ?>">
                                                             </td>
-                                                            <td>
-                                                                <input type="number" min="0.01" step="any" class="form-control form-control-sm item-quantity" name="quantity[]" value="<?= $item["qtd"] ?>">
-                                                            </td>
+
                                                             <td class="text-center align-middle">
+                                                                <?= $produto["abbrv"] ?>
+                                                            </td>
+
+                                                            <td>
+                                                                <input <?= $readonly ?> type="number" min="0.01" step="any" class="form-control form-control-sm item-quantity" name="quantity[]" value="<?= $item["qtd"] ?>">
+                                                            </td>
+                                                            <td <?= $hidden ?> class="text-center align-middle">
                                                                 <button type="button" class="btn btn-danger btn-sm btn-remove-item">
                                                                     <i class="fas fa-trash" aria-hidden="true"></i>
                                                                 </button>
@@ -194,14 +211,14 @@ $mov_items = MovementItem::getByMovement($_SESSION["auth"], $_GET["id"]);
                                 ?>
 
                                 <div class="w-100 d-flex justify-content-end mt-5">
-                                    <a href="./movements.php" class="btn btn-danger btn-icon-split mr-2">
+                                    <a <?= $hidden ?> href="./movements.php" class="btn btn-danger btn-icon-split mr-2">
                                         <span class="icon text-white-50">
                                             <i class="fas fa-trash"></i>
                                         </span>
                                         <span class="text">Cancel</span>
                                     </a>
 
-                                    <button type="submit" class="btn btn-success btn-icon-split">
+                                    <button <?= $hidden ?> type="submit" class="btn btn-success btn-icon-split">
                                         <span class="icon text-white-50">
                                             <i class="fas fa-check"></i>
                                         </span>

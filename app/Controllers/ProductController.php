@@ -21,6 +21,11 @@ class ProductController
             Redirect::to("/php/storetrack/dashboard/products-create.php");
         };
 
+        if(!is_numeric($data["price"])){
+            $_SESSION["error"] = "Fill a valid numerical price!";
+            Redirect::to("/php/storetrack/dashboard/product-edit.php?id=". $data["product_id"]);
+        };
+
         unset($_SESSION["old"]);
         Product::insert($userId, $data["category"], $data["unit"], $data["description"], $data["price"]);
     }

@@ -124,7 +124,7 @@ if (isset($_SESSION["old"])) {
                                     </div>
                                     <div class="form-group col-md-2">
                                         <label for="price">Price</label>
-                                        <input value="<?= $oldPrice ?>" type="number" class="form-control" name="price" id="price" placeholder="Product price">
+                                        <input value="<?= $oldPrice ?>" type="text" class="form-control" name="price" id="price" placeholder="Product price">
                                     </div>
 
                                 </div>

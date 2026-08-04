@@ -96,9 +96,9 @@ $movements = Movement::get($_SESSION["auth"]);
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php 
-                                            $id = 0;
-                                            foreach ($movements as $movement): 
+                                        <?php
+                                        $id = 0;
+                                        foreach ($movements as $movement):
                                         ?>
                                             <?php $id++ ?>
                                             <tr>
@@ -112,15 +112,28 @@ $movements = Movement::get($_SESSION["auth"]);
                                                 <td>
                                                     <a href="./movement-edit.php?id=<?= $movement["id"] ?>" class="btn btn-secondary btn-icon-split">
                                                         <span class="icon text-white">
-                                                            <i class="fas fa-pencil"></i>
+                                                            <?php if ($movement["status"] === "F"): ?>
+                                                                <i class="fas fa-eye"></i>
+                                                            <?php else: ?>
+                                                                <i class="fas fa-pencil"></i>
+                                                            <?php endif; ?>
                                                         </span>
                                                     </a>
 
-                                                    <a href="../routes/movement.php?id=<?= $movement["id"] ?>&action=delete" class="btn btn-danger btn-icon-split">
-                                                        <span class="icon text-white">
-                                                            <i class="fas fa-trash"></i>
-                                                        </span>
-                                                    </a>
+                                                    <?php if ($movement["status"] === "F"): ?>
+                                                        <a href="../routes/movement.php?id=<?= $movement["id"] ?>&action=delete" class="btn btn-warning btn-icon-split">
+                                                            <span class="icon text-white">
+                                                                <i class="fa-solid fa-reply"></i>
+                                                            </span>
+                                                        </a>
+                                                    <?php else: ?>
+                                                        <a href="../routes/movement.php?id=<?= $movement["id"] ?>&action=delete" class="btn btn-danger btn-icon-split">
+                                                            <span class="icon text-white">
+                                                                <i class="fas fa-trash"></i>
+                                                            </span>
+                                                        </a>
+                                                    <?php endif; ?>
+
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
