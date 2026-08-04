@@ -124,7 +124,8 @@ $products = Product::get($_SESSION["auth"]);
                                                     <?php foreach ($products as $product): ?>
                                                         <option
                                                             value="<?= $product["id"] ?>"
-                                                            data-description="<?= htmlspecialchars($product["description"]) ?>">
+                                                            data-description="<?= htmlspecialchars($product["description"]) ?>"
+                                                            data-abbrv="<?= htmlspecialchars($product["abbrv"]) ?>">
                                                             <?= htmlspecialchars($product["description"]) ?>
                                                         </option>
                                                     <?php endforeach; ?>
@@ -149,13 +150,14 @@ $products = Product::get($_SESSION["auth"]);
                                                     <tr>
                                                         <th class="text-center" style="width: 50px;">#</th>
                                                         <th>Product</th>
+                                                        <th class="text-center" style="width: 80px;">Unit</th>
                                                         <th style="width: 180px;">Quantity</th>
                                                         <th class="text-center" style="width: 100px;">Actions</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr id="emptyItemsRow">
-                                                        <td colspan="4" class="text-center text-secondary">
+                                                        <td colspan="5" class="text-center text-secondary">
                                                             No items added yet.
                                                         </td>
                                                     </tr>
@@ -240,7 +242,7 @@ $products = Product::get($_SESSION["auth"]);
                     if ($("#emptyItemsRow").length === 0) {
                         $("#itemsTable tbody").append(
                             '<tr id="emptyItemsRow">' +
-                            '<td colspan="4" class="text-center text-secondary">No items added yet.</td>' +
+                            '<td colspan="5" class="text-center text-secondary">No items added yet.</td>' +
                             "</tr>"
                         );
                     }
@@ -271,6 +273,7 @@ $products = Product::get($_SESSION["auth"]);
                     $existing.find(".item-quantity").val(quantity);
                 } else {
                     const description = $product.find("option:selected").data("description");
+                    const abbrv = $product.find("option:selected").data("abbrv");
 
                     $("#itemsTable tbody").append(
                         '<tr class="item-row" data-product-id="' + productId + '">' +
@@ -279,6 +282,7 @@ $products = Product::get($_SESSION["auth"]);
                         description +
                         '<input type="hidden" name="prd_id[]" value="' + productId + '">' +
                         "</td>" +
+                        '<td class="text-center align-middle">' + abbrv + "</td>" +
                         '<td>' +
                         '<input type="number" min="0.01" step="any" class="form-control form-control-sm item-quantity" name="quantity[]" value="' + quantity + '">' +
                         "</td>" +

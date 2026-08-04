@@ -133,14 +133,15 @@ $hidden = $movements["status"] === "F" ? "hidden" : "";
                                     </div>
 
                                     <div class="card-body">
-                                        <div hidden class="form-row align-items-end">
+                                        <div <?= $hidden ?> class="form-row align-items-end">
                                             <div class="form-group col-md-6 mb-0">
                                                 <label for="itemProduct">Product</label>
                                                 <select id="itemProduct" class="form-control">
                                                     <?php foreach ($products as $product): ?>
                                                         <option
                                                             value="<?= $product["id"] ?>"
-                                                            data-description="<?= htmlspecialchars($product["description"]) ?>">
+                                                            data-description="<?= htmlspecialchars($product["description"]) ?>"
+                                                            data-abbrv="<?= htmlspecialchars($product["abbrv"]) ?>">
                                                             <?= htmlspecialchars($product["description"]) ?>
                                                         </option>
                                                     <?php endforeach; ?>
@@ -281,7 +282,7 @@ $hidden = $movements["status"] === "F" ? "hidden" : "";
                     if ($("#emptyItemsRow").length === 0) {
                         $("#itemsTable tbody").append(
                             '<tr id="emptyItemsRow">' +
-                            '<td colspan="4" class="text-center text-secondary">No items added yet.</td>' +
+                            '<td colspan="5" class="text-center text-secondary">No items added yet.</td>' +
                             "</tr>"
                         );
                     }
@@ -312,6 +313,7 @@ $hidden = $movements["status"] === "F" ? "hidden" : "";
                     $existing.find(".item-quantity").val(quantity);
                 } else {
                     const description = $product.find("option:selected").data("description");
+                    const abbrv = $product.find("option:selected").data("abbrv");
 
                     $("#itemsTable tbody").append(
                         '<tr class="item-row" data-product-id="' + productId + '">' +
@@ -320,6 +322,7 @@ $hidden = $movements["status"] === "F" ? "hidden" : "";
                         description +
                         '<input type="hidden" name="prd_id[]" value="' + productId + '">' +
                         "</td>" +
+                        '<td class="text-center align-middle">' + abbrv + "</td>" +
                         '<td>' +
                         '<input type="number" min="0.01" step="any" class="form-control form-control-sm item-quantity" name="quantity[]" value="' + quantity + '">' +
                         "</td>" +

@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["method"] === "put") {
 
 if ($_SERVER["REQUEST_METHOD"] === "GET" && $_GET["action"] === "delete") {
     ProductController::delete($_GET["id"], $_SESSION["auth"]);
-    $_SESSION["success"] = "Success on delete product id " . $_GET["id"];
+    $_SESSION["error"] = "Can't delete! This product was already movemented.";
 }
 
 Redirect::to("/php/storetrack/dashboard/products.php");

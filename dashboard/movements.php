@@ -86,10 +86,10 @@ $movements = Movement::get($_SESSION["auth"]);
                                     <thead>
                                         <tr>
                                             <th>ID</th>
+                                            <th>Status</th>
                                             <th>Type</th>
                                             <th>Title</th>
                                             <th>Observation</th>
-                                            <th>Status</th>
                                             <th>Created At</th>
                                             <th class="bg-light text-secondary">Canceled at</th>
                                             <th>Actions</th>
@@ -104,9 +104,9 @@ $movements = Movement::get($_SESSION["auth"]);
                                             <tr>
                                                 <td><?= $id ?></td>
                                                 <td><?= htmlspecialchars($movement["type"]) ?></td>
-                                                <td><?= htmlspecialchars($movement["title"]) ?></td>
-                                                <td><?= htmlspecialchars($movement["obs"]) ?></td>
                                                 <td><?= htmlspecialchars($movement["status"]) ?></td>
+                                                <td><?= htmlspecialchars($movement["title"]) ?></td>
+                                                <td><?= htmlspecialchars($movement["obs"]) ?></td>  
                                                 <td><?= htmlspecialchars($movement["created_at"]) ?></td>
                                                 <td class="bg-light text-secondary"><?= htmlspecialchars($movement["canceled_at"]) ?></td>
                                                 <td>
