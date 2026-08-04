@@ -50,10 +50,16 @@ class ProductController
         };
 
         Product::update($userId, $data["product_id"], $data["unit"], $data["category"], $data["description"], $data["price"]);
+        
     }
 
     public static function delete(int $prdId, int $userId)
     {
-        Product::delete($userId, $prdId);
+        $return = Product::delete($userId, $prdId);
+        if($return) {
+            $_SESSION["success"] = "Product deleted successfully!";
+        } else {
+            $_SESSION["error"] = "Can't delete! This product was already movemented.";
+        }
     }
 }

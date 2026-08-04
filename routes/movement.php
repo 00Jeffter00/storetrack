@@ -8,6 +8,8 @@ use App\Helpers\Redirect;
 session_status() === PHP_SESSION_ACTIVE ? "" : session_start();
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && !isset($_POST["method"])) {
+    $_SESSION["old"] = $_POST;
+
     MovementController::store($_SESSION["auth"], $_POST);
 }
 

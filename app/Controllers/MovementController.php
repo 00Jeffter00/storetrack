@@ -13,6 +13,11 @@ class MovementController
 {
     public static function store(int $user_id, array $data)
     {
+        if(empty($data["type"]) || empty($data["title"]) || empty($data["observation"]) || empty($data["status"])) {
+            $_SESSION["error"] = "Fill all fields!";
+            Redirect::to("/php/storetrack/dashboard/movement-create.php");
+        }
+
         $movement = Movement::create($user_id, $data["type"], $data["title"], $data["observation"], $data["status"]);
 
         $items = [];
@@ -38,7 +43,7 @@ class MovementController
             MovementItem::create($user_id, $movement, $item["prd_id"], $item["quantity"]);
 
             if ($data["status"] === "F") {
-                Product::updateQuantity($_SESSION["auth"], $item["prd_id"], $item["quantity"], $data["type"]);
+                Product::updateQuantity($_SESSION["auth"], $item["prd_id"], $item["quantity"], $quantity_type);
             }
         }
 
@@ -47,6 +52,11 @@ class MovementController
 
     public static function update(int $user_id, array $data)
     {
+        if(empty($data["type"]) || empty($data["title"]) || empty($data["observation"]) || empty($data["status"])) {
+            $_SESSION["error"] = "Fill all fields!";
+            Redirect::to("/php/storetrack/dashboard/movement-edit.php?id=".$data["id"]);
+        }
+
         $already_finished = Movement::getByID($user_id, $data["id"]);
 
         if($already_finished["status"] === "F") {
@@ -107,11 +117,16 @@ class MovementController
             foreach ($mov_item as $item) {
                 Product::updateQuantity($user_id, $item["prd_id"], $item["qtd"], $movement);
             }
+
+            Movement::updateStatus($user_id, $movement_id);
+            $_SESSION["success"] = "Movement reopened successfully";
+        } else {
+
+            Movement::delete($user_id, $movement_id);
+            MovementItem::deleteByMovement($user_id, $movement_id);
+    
+            $_SESSION["success"] = "Movement deleted successfully";
         }
 
-        Movement::delete($user_id, $movement_id);
-        MovementItem::deleteByMovement($user_id, $movement_id);
-
-        $_SESSION["success"] = "Movement deleted successfully";
     }
 }

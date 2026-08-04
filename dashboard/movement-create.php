@@ -7,6 +7,17 @@ require_once __DIR__ . "/../vendor/autoload.php";
 use App\Models\Product;
 
 $products = Product::get($_SESSION["auth"]);
+
+$old_title = $old_obs = "";
+$old_products = [];
+
+if (isset($_SESSION["old"])) {
+    $old_title = $_SESSION["old"]["title"];
+    $old_obs = $_SESSION["old"]["observation"];
+
+    $old_products = array_combine($_SESSION["old"]["prd_id"], $_SESSION["old"]["quantity"]);
+    unset($_SESSION["old"]);
+}
 ?>
 
 <!DOCTYPE html>
@@ -57,7 +68,12 @@ $products = Product::get($_SESSION["auth"]);
                 <?php
                 require __DIR__ . "/../resources/components/header.php";
                 ?>
+
                 <!-- End of Topbar -->
+
+                <?php
+                require __DIR__ . "/../resources/components/error.php";
+                ?>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
@@ -77,6 +93,8 @@ $products = Product::get($_SESSION["auth"]);
                         </div>
 
                         <div class="card-body">
+
+
                             <form action="../routes/movement.php" method="POST" id="movementForm">
 
                                 <div class="form-row">
@@ -100,12 +118,12 @@ $products = Product::get($_SESSION["auth"]);
 
                                 <div class="form-group">
                                     <label for="title">Title</label>
-                                    <input type="text" class="form-control" name="title" id="title" placeholder="Insert a main title">
+                                    <input value="<?= $old_title ?>" type="text" class="form-control" name="title" id="title" placeholder="Insert a main title">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="observation">Observation</label>
-                                    <textarea placeholder="Insert details" class="form-control" name="observation" id="observation" rows="3"></textarea>
+                                    <textarea placeholder="Insert details" class="form-control" name="observation" id="observation" rows="3"><?= $old_obs ?></textarea>
                                 </div>
 
                                 <div class="card border-left-primary shadow-none">
@@ -157,10 +175,42 @@ $products = Product::get($_SESSION["auth"]);
                                                 </thead>
                                                 <tbody>
                                                     <tr id="emptyItemsRow">
-                                                        <td colspan="5" class="text-center text-secondary">
-                                                            No items added yet.
-                                                        </td>
-                                                    </tr>
+                                                        <?php if (!empty($old_products)): ?>
+                                                            <?php foreach ($old_products as $key => $value): ?>
+                                                                <tr class="item-row" data-product-id="<?= $key ?>">
+                                                                    <td class="item-number text-center align-middle">
+                                                                        <?= $key ?>
+                                                                    </td>
+
+                                                                    <td class="align-middle">
+                                                                        <?php
+                                                                            $produto = Product::getByID($_SESSION["auth"], $key);
+
+                                                                            echo $produto["description"];
+                                                                        ?>
+                                                                        <input type="hidden" name="prd_id[]" value="<?= $value ?>">
+                                                                    </td>
+
+                                                                    <td class="text-center align-middle">
+                                                                        <?= $produto["abbrv"] ?>
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <input type="number" min="0.01" step="any" class="form-control form-control-sm item-quantity" name="quantity[]" value="<?= $value ?>">
+                                                                    </td>
+                                                                    <td class="text-center align-middle">
+                                                                        <button type="button" class="btn btn-danger btn-sm btn-remove-item">
+                                                                            <i class="fas fa-trash" aria-hidden="true"></i>
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
+                                                <td colspan="5" class="text-center text-secondary">
+                                                    No items added yet.
+                                                </td>
+                                            <?php endif; ?>
+                                            </tr>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -229,10 +279,10 @@ $products = Product::get($_SESSION["auth"]);
 
     <!-- Page level custom scripts -->
     <script>
-        $(function () {
+        $(function() {
 
             function renderItemNumbers() {
-                $("#itemsTable .item-number").each(function (index) {
+                $("#itemsTable .item-number").each(function(index) {
                     $(this).text(index + 1);
                 });
             }
@@ -251,7 +301,7 @@ $products = Product::get($_SESSION["auth"]);
                 }
             }
 
-            $("#btnAddItem").on("click", function () {
+            $("#btnAddItem").on("click", function() {
                 const $product = $("#itemProduct");
                 const $quantity = $("#itemQuantity");
                 const productId = $product.val();
@@ -303,13 +353,13 @@ $products = Product::get($_SESSION["auth"]);
                 $product.focus();
             });
 
-            $(document).on("click", ".btn-remove-item", function () {
+            $(document).on("click", ".btn-remove-item", function() {
                 $(this).closest(".item-row").remove();
                 renderItemNumbers();
                 refreshEmptyRow();
             });
 
-            $("#movementForm").on("submit", function (e) {
+            $("#movementForm").on("submit", function(e) {
                 if ($("#itemsTable .item-row").length === 0) {
                     e.preventDefault();
                     alert("Add at least one item to the movement.");

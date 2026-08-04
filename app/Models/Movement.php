@@ -95,6 +95,24 @@ class Movement
         ]);
     }
 
+    public static function updateStatus(int $user_id, int $mov_id)
+    {
+        $conn = Database::connection();
+
+        $sql = "
+            UPDATE movements 
+            SET status = 'A'
+            WHERE user_id = :user_id AND id = :mov_id
+        ";
+
+        $stmt = $conn->prepare($sql);
+
+        $stmt->execute([
+            "user_id" => $user_id,
+            "mov_id" => $mov_id,
+        ]);
+    }
+
     public static function delete(int $user_id, int $mov_id)
     {
         $conn = Database::connection();

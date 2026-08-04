@@ -103,8 +103,8 @@ $movements = Movement::get($_SESSION["auth"]);
                                             <?php $id++ ?>
                                             <tr>
                                                 <td><?= $id ?></td>
-                                                <td><?= htmlspecialchars($movement["type"]) ?></td>
                                                 <td><?= htmlspecialchars($movement["status"]) ?></td>
+                                                <td><?= htmlspecialchars($movement["type"]) ?></td>
                                                 <td><?= htmlspecialchars($movement["title"]) ?></td>
                                                 <td><?= htmlspecialchars($movement["obs"]) ?></td>  
                                                 <td><?= htmlspecialchars($movement["created_at"]) ?></td>

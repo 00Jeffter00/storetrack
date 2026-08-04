@@ -74,6 +74,10 @@ $hidden = $movements["status"] === "F" ? "hidden" : "";
                 ?>
                 <!-- End of Topbar -->
 
+                <?php
+                require __DIR__ . "/../resources/components/error.php";
+                ?>
+
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     <!-- DataTales Example -->

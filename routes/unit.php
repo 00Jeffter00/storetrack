@@ -16,6 +16,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["method"] === "put") {
 
     try {
         UnitController::update($_POST, $_SESSION["auth"]);
+        unset($_SESSION["old"]);
     } catch (Exception $e) {
         $_SESSION["error"] = "Already exists a unit with this name or abbreviature!";
         Redirect::to("/php/storetrack/dashboard/unit-edit.php?id=" . $_POST['id']);
@@ -27,6 +28,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST" && !isset($_POST["method"])) {
 
     try {
         UnitController::store($_POST, $_SESSION["auth"]);
+        unset($_SESSION["old"]);
     } catch (Exception $e) {
         $_SESSION["error"] = "Already exists a unit with this name or abbreviature!";
         Redirect::to("/php/storetrack/dashboard/unit-create.php");
